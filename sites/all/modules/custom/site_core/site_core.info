@@ -1,0 +1,5 @@
+name = Site Core
+description = Implement function of Core
+core = 7.x
+package = Analytic Portal
+version = "7.x-1.0"

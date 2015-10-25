@@ -1,0 +1,137 @@
+<?php
+function get_list_of_blog_post($display = 'block'){
+    //$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+
+    $view = views_get_view('blog');
+    $view->set_display($display);
+    $view->pre_execute();
+    //$view->set_current_page($page);
+    $view->execute();
+    //kpr($view->query->pager);die;
+    //return $view->query->pager;
+
+    $result = null;
+//    $result['title'] = $view->human_name;
+//    $result['result'] = array();
+
+    if (!empty($view->result)) {
+
+        foreach($view->result as $row => $value) {
+            //kpr($value);
+            $title = $value->node_title;
+            $author = $value->users_node_name;
+            $content = null;
+            $summary = $value->field_body[0]['raw']['summary'];
+            if ($summary) {
+                $content = generate_summary_content_by_character_count($summary,180);
+            }else {
+                $content = generate_summary_content_by_character_count($value->field_body[0]['raw']['value'],180);
+            }
+            $data['content'] = $content;
+
+            $thumbnail = array();
+            if (!empty($value->field_field_image)) {
+                $image = $value->field_field_image;
+                $thumbnail['src'] = image_style_url('blog', $image[0]['raw']['uri']);
+                $thumbnail['alt'] = $image[0]['alt'] ? $image[0]['alt'] : $title;
+                $thumbnail['title'] = $image[0]['title'];
+            }
+
+            $date = null;
+            $date_field = $value->node_created;
+            if (!empty($date_field)) {
+                $dateObj = new DateObject($date_field);
+                $date = date_format_date($dateObj,'medium');
+            }
+
+
+            $result[] = array(
+                'title'     =>  $title,
+                'author'    =>  $author,
+                'url'       =>  get_path_from_node_id($value->nid),
+                'content'   =>  $content,
+                'thumbnail' =>  $thumbnail,
+                'date'      =>  $date,
+            );
+
+        }
+    }
+    //kpr($result);
+    return $result;
+}
+function get_list_of_note(){
+    //$page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 0;
+
+    $view = views_get_view('note');
+    $view->set_display('block');
+    $view->pre_execute();
+    //$view->set_current_page($page);
+    $view->execute();
+    //kpr($view->query->pager);die;
+    //return $view->query->pager;
+
+    $result = null;
+//    $result['title'] = $view->human_name;
+//    $result['result'] = array();
+
+    if (!empty($view->result)) {
+
+        foreach($view->result as $row => $value) {
+            //kpr($value);
+            $title = $value->node_title;
+            $author = $value->users_node_name;
+            $content = null;
+            $summary = $value->field_body[0]['raw']['summary'];
+            if ($summary) {
+                $content = generate_summary_content_by_character_count($summary,180);
+            }else {
+                $content = generate_summary_content_by_character_count($value->field_body[0]['raw']['value'],180);
+            }
+            $data['content'] = $content;
+
+            $date = null;
+            $date_field = $value->node_created;
+            if (!empty($date_field)) {
+                $dateObj = new DateObject($date_field);
+                $date = date_format_date($dateObj,'medium');
+            }
+
+
+            $result[] = array(
+                'title'     =>  $title,
+                'author'    =>  $author,
+                'url'       =>  get_path_from_node_id($value->nid),
+                'content'   =>  $content,
+                'thumbnail' =>  $thumbnail,
+                'date'      =>  $date,
+            );
+
+        }
+    }
+    //kpr($result);
+    return $result;
+}
+function generate_summary_content_by_character_count($string, $character_limit) {
+    /*if (strlen($string) > $character_limit) {
+        $string = substr($string,0,$character_limit);
+        $words = explode(' ',$string);
+        array_pop($words);
+        array_push($words,'...');
+        return implode(' ', $words);
+    }*/
+    $alter = array(
+        'max_length' => $character_limit, //Integer
+        'ellipsis' => TRUE, //Boolean
+        'word_boundary' => TRUE, //Boolean
+        'html' => TRUE, //Boolean
+    );
+    $trimmed_text = drupal_html_to_text(views_trim_text($alter, $string));
+    return $trimmed_text;
+}
+function get_path_from_node_id($node_id) {
+    return base_path() . drupal_get_path_alias('node/' . $node_id);
+}
+function site_core_user_login(&$edit, $account){
+    // both failed to redirect, although my condition is true
+    drupal_goto('/');
+}

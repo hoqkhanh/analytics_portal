@@ -1,0 +1,44 @@
+.menu-right{
+    float: right;
+}
+.menu-right li{
+    float: left;
+    position: relative;
+    display: block;
+}
+.menu-right li a{
+    display: block;
+    padding-top: 10px;
+    padding-left: 30px;
+    font-size: 20px;
+    color: #fff;
+}
+.primary li{
+    display: inline-block;
+    padding-right: 10px;
+}
+.primary{
+    margin: 0;
+    padding-left: 0;
+    padding-bottom: 10px;
+}
+.primary li a{
+    font-weight: bold;
+}
+.privatemsg-list{
+    width: 100%;
+    margin-top: 20px;
+}
+.privatemsg-list td, .privatemsg-list th{
+    padding: 5px;
+}
+.action-links li{
+    padding-top: 15px;
+    display: block;
+}
+.form-actions a{
+    margin-left: 20px;
+}
+#privatemsg-list fieldset{
+    height: 50px;
+}
